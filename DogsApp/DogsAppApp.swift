@@ -11,7 +11,8 @@ import SwiftUI
 struct DogsAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DogDetailView()
+                .environmentObject(ContentModel())
         }
     }
 }
