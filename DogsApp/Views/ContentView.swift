@@ -9,8 +9,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var model: ContentModel
+    
     var body: some View {
-       DogDetailView()
+        
+        Button("See the waterdog") {
+            // Set the current breed
+            
+            model.setCurrentBreed(breedName: "waterdog")
+            
+        }
+      
+//       DogDetailView()
     }
 }
 

@@ -16,8 +16,9 @@ import Foundation
 struct Constants {
     
     // Static variables allow us to reference these properties without initializing an object of the Constants struct
-    static var apiUrl = "https://dog.ceo/api/breeds/list/all"
     static var breedsUrl = "https://dog.ceo/api/breeds/list/all"
+    static var baseApiUrl = "https://dog.ceo/api"
+    static var breedUrl = "https://dog.ceo/api/breed/waterdog/images"
     
     
 }

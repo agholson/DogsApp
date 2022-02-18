@@ -12,15 +12,21 @@ class ContentModel: ObservableObject {
     @Published var dogs = Message()
     @Published var breeds = [Breed]()
     
+    // New property to hold the list of URLs
+    @Published var breedImageUrlList: [String]?
+    
+    // New property to hold dog
+    @Published var currentBreed: Breed?
+    
     init() {
         getDogs()
-        getBreeds()
+//        getBreeds()
     }
     
     func getDogs(){
         
         // Create URL
-        let urlString = Constants.apiUrl
+        let urlString = Constants.breedsUrl
         let url = URL(string: urlString)
         
         if let url = url {
@@ -40,7 +46,7 @@ class ContentModel: ObservableObject {
                         // Parse JSON
                         let decoder = JSONDecoder()
                         let result = try decoder.decode(DogSearch.self, from: data!)
-                        print("Result line 43 ViewModel \(result)")
+//                        print("Result line 43 ViewModel \(result)")
                         
                         // Assign result to the dogs property
                         DispatchQueue.main.async {
@@ -57,6 +63,7 @@ class ContentModel: ObservableObject {
             dataTask.resume()
         }
     }
+    
     
     func getBreeds() {
         
@@ -97,5 +104,39 @@ class ContentModel: ObservableObject {
             // Start the Data Task
             dataTask.resume()
         }
+    }
+    
+    // MARK: - New Method to Retrieve Breed/ Images
+    func setCurrentBreed(breedName: String) {
+        
+        // Create an instance of temporary JSON to allow us to conform to the Codable protocol
+        let tempJson = """
+{
+    "name": "\(breedName)"
+}
+"""
+        // Convert the string into JSON with UTF8
+        let jsonData = tempJson.data(using: .utf8)!
+        let decoder = JSONDecoder()
+        
+        // Instantiate a new breed
+        do {
+            // Decode the breed
+            var breed = try decoder.decode(Breed.self, from: jsonData)
+            
+            // Get the list of images for this breed
+            breed.getBreedImageList()
+            
+            // Print the list of URLs
+            print("Breed imageUrlList line 131 in ViewModel: \(breed.imageUrlList ?? ["no images loaded"])")
+            
+            // Update the current breed
+            self.currentBreed = breed
+        
+        }
+        catch {
+            print("Error occurred decoding JSON line 128 in ViewModel: \(error)")
+        }
+        
     }
 }
