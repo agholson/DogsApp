@@ -127,11 +127,11 @@ class ContentModel: ObservableObject {
             // Get the list of images for this breed
             breed.getBreedImageList()
             
-            // Print the list of URLs
-            print("Breed imageUrlList line 131 in ViewModel: \(breed.imageUrlList ?? ["no images loaded"])")
-            
-            // Update the current breed
-            self.currentBreed = breed
+            DispatchQueue.main.async {
+                // Update the current breed
+                self.currentBreed = breed
+            }
+           
         
         }
         catch {

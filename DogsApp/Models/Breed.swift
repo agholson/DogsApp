@@ -8,23 +8,7 @@
 import Foundation
 
 /**
- Breed as defined in the following API: https://dog.ceo/api/breeds/list/all
- {
-   "message": {
-        "affenpinscher":[],
-        "african":[],
-        "waterdog": [
-            "spanish"
-        ],
-        "weimaraner":[],
-        "whippet":[],
-        "wolfhound": [
-            "irish"
-        ]
- 
-    },
- "status":"success"
- }
+ Breed listed in the following  API: https://dog.ceo/api/breeds/list/all
  */
 class Breed: Decodable, Identifiable {
 //    var id = UUID()
@@ -47,10 +31,14 @@ class Breed: Decodable, Identifiable {
     func getBreedImageList() {
         // Construct the URL string for images for a specific breed based on its name
         // e.g. https://dog.ceo/api/breed/waterdog/images
-        let urlString = "\(Constants.baseApiUrl)/\(self.name)/images"
+        // https://dog.ceo/api/breed/waterdog/images
+        let urlString = "\(Constants.baseApiUrl)/breed/\(self.name)/images"
+        
+        print(urlString)
         
         // Create the URL object based on the string
         let url = URL(string: urlString)
+        
         
         // If the url is not nil, then proceed
         if let url = url {
@@ -78,6 +66,8 @@ class Breed: Decodable, Identifiable {
                             DispatchQueue.main.async {
                                 // Grab the URL list from the message property
                                 self.imageUrlList = decodedResult.message!
+                                
+//                                print("Image URL list line 70: \(self.imageUrlList)")
                                 
                             }
                         }
