@@ -33,9 +33,7 @@ class Breed: Decodable, Identifiable {
         // e.g. https://dog.ceo/api/breed/waterdog/images
         // https://dog.ceo/api/breed/waterdog/images
         let urlString = "\(Constants.baseApiUrl)/breed/\(self.name)/images"
-        
-        print(urlString)
-        
+                
         // Create the URL object based on the string
         let url = URL(string: urlString)
         
@@ -66,9 +64,7 @@ class Breed: Decodable, Identifiable {
                             DispatchQueue.main.async {
                                 // Grab the URL list from the message property
                                 self.imageUrlList = decodedResult.message!
-                                
-//                                print("Image URL list line 70: \(self.imageUrlList)")
-                                
+                                                                
                             }
                         }
                         catch {

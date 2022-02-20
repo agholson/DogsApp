@@ -14,14 +14,32 @@ struct ContentView: View {
     
     var body: some View {
         
-        Button("See the waterdog") {
-            // Set the current breed
+        VStack {
             
-            model.setCurrentBreed(breedName: "waterdog")
+            // MARK: - Set Current Breed
+            Button("See the waterdog") {
+                // Set the current breed
+                
+                model.setCurrentBreed(breedName: "waterdog")
+                
+            }
             
+            // MARK: - Navigate to the View for this breed
+            // Only Show this, if the current breed is set
+            if model.currentBreed != nil {
+                NavigationView {
+                    NavigationLink {
+                        DogDetailView(breed: model.currentBreed!)
+                    } label: {
+                        Text("Check out more details about \(model.currentBreed!.name)")
+                    }
+                    
+                }
+            }
+            
+            
+            //       DogDetailView()
         }
-      
-//       DogDetailView()
     }
 }
 

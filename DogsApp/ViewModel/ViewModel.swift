@@ -124,14 +124,14 @@ class ContentModel: ObservableObject {
             // Decode the breed
             var breed = try decoder.decode(Breed.self, from: jsonData)
             
-            // Get the list of images for this breed
+            // MARK: - Get the list of images for this breed
             breed.getBreedImageList()
             
             DispatchQueue.main.async {
                 // Update the current breed
                 self.currentBreed = breed
+                
             }
-           
         
         }
         catch {
