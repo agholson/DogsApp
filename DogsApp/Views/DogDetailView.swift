@@ -20,56 +20,33 @@ struct DogDetailView: View {
                     .font(.headline)
                 
                 // MARK: Create Asynchronous Images
-                ForEach(breed.imageUrlList!, id: \.self) { imageUrl in
-                    AsyncImage(url: URL(string: imageUrl)) { phase in
-                        switch phase {
-                        case .empty:
-                            Color.purple.opacity(0.1)
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                        case .failure(_):
-                            Image(systemName: "exclamationmark.icloud")
-                                .resizable()
-                                .scaleEffect()
-                        @unknown default:
-                            Image(systemName: "exclamationmark.icloud")
+                // Process this differently if the imageUrlList does not contain anything
+                if breed.imageUrlList == nil {
+                    Image(systemName: "exclamationmark.icloud")
+                }
+                // Else it contains URLs, so load each of those
+                else {
+                    ForEach(breed.imageUrlList!, id: \.self) { imageUrl in
+                        AsyncImage(url: URL(string: imageUrl)) { phase in
+                            switch phase {
+                            case .empty:
+                                Color.purple.opacity(0.1)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            case .failure(_):
+                                Image(systemName: "exclamationmark.icloud")
+                                    .resizable()
+                                    .scaledToFit()
+                            @unknown default:
+                                Image(systemName: "exclamationmark.icloud")
+                            }
                         }
                     }
-//                    .frame(width: 200, height: 200)
                 }
             }
         }
-        //        VStack {
-        //            List(0..<model.breeds.count, id: \.self) { index in
-        //                ForEach(model.breeds[index].message!, id: \.self) { message in
-        //                    AsyncImage(url: URL(string: "\(message)")) { phase in
-        //                        switch phase {
-        //                        case .empty:
-        //                            Color.purple.opacity(0.1)
-        //                        case .success(let image):
-        //                            image
-        //                                .resizable()
-        //                                .scaledToFit()
-        //                        case .failure(_):
-        //                            Image(systemName: "exclamationmark.icloud")
-        //                                .resizable()
-        //                                .scaledToFit()
-        //                        @unknown default:
-        //                            Image(systemName: "exclamationmark.icloud")
-        //                        }
-        //                    }
-        //                    .frame(width:300, height: 300)
-        //                    .cornerRadius(20)
-        //                }
-        //            }
-        //        }
-        //        .navigationBarTitle("dog.name")
-        //        .padding(.top, 0)
-        //        .onAppear {
-        //            print("Executed line 20")
-        //        }
     }
 }
 

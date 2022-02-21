@@ -20,7 +20,7 @@ class ContentModel: ObservableObject {
     
     init() {
         getDogs()
-//        getBreeds()
+        getBreeds()
     }
     
     func getDogs(){
@@ -64,46 +64,56 @@ class ContentModel: ObservableObject {
         }
     }
     
-    
+    /**
+    Gets a list of breeds based on the dogs list/ the properties within the Message class, where each property represents a breed of dog. Each value for the breed of dog represents a
+     specific type of breed of that dog. For example, key "terrier": [["american","australian","bedlington", "irish"] has all these types of terriers. For these, it makes the new breed name
+     "irish terrier"
+     
+     From:
+     https://dog.ceo/api/breeds/list/all
+     
+     */
     func getBreeds() {
+        // Create a Mirror class of the Message object assigned to the dogs variable
+        let mirror = Mirror(reflecting: dogs)
         
-        // Create URL
-        let urlString = Constants.breedsUrl
-        let url = URL(string: urlString)
+        // Create an empty list of Breeds to hold each of the breeds
+        var breedList = [Breed]()
         
-        if let url = url {
-            // Create URL request
-            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-            request.httpMethod = "GET"
-             
-            // Get URLSession
-            let session = URLSession.shared
+        let decoder = JSONDecoder()
+        
+        // Iterate through each of the Message properties
+        for breedName in mirror.children {
             
-            // Create Data Task
-            let dataTask = session.dataTask(with: request) { (data, response, error) in
-                // Check that there is not an error
-                if error == nil {
-                    
-                    do {
-                        // Parse JSON
-                        let decoder = JSONDecoder()
-                        let resultBreed = try decoder.decode(Breed.self, from: data!)
-                        print("Breads line 84 \(resultBreed)")
-                        
-                        // Assign result to the dogs property
-                        DispatchQueue.main.async {
-                            self.breeds = [resultBreed]
-                        }
-                    // Check that there is not a parsing error
-                    } catch {
-                        print("Error in line 92 ViewModel \(error)")
-                    }
-                }
+            // Create an instance of temporary JSON to allow us to conform to the Codable protocol
+            let tempJson = """
+{
+    "name": "\(breedName.label!)"
+}
+"""
+            // Convert the string into JSON with UTF8
+            let jsonData = tempJson.data(using: .utf8)!
+            
+            // Instantiate a new breed
+            do {
+                // Decode the breed
+                let newBreed = try decoder.decode(Breed.self, from: jsonData)
+                
+                // Add the new breed to the list of breeds
+                breedList.append(newBreed)
+                
             }
-            
-            // Start the Data Task
-            dataTask.resume()
+            catch {
+                print("Error occurred decoding JSON line 106 in ViewModel: \(error)")
+            }
         }
+        
+        // Set the breeds property equal to this breeds list
+        
+        DispatchQueue.main.async {
+            self.breeds = breedList
+        }
+        
     }
     
     // MARK: - New Method to Retrieve Breed/ Images

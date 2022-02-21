@@ -32,11 +32,13 @@ class Breed: Decodable, Identifiable {
         // Construct the URL string for images for a specific breed based on its name
         // e.g. https://dog.ceo/api/breed/waterdog/images
         // https://dog.ceo/api/breed/waterdog/images
+        
+        // Check if the breed name is two words, if it is, then only use the second word, which represents the master breed.
+        // For example, Irish Terrier, becomes like this for the URL: https://dog.ceo/api/breed/terrier/images
         let urlString = "\(Constants.baseApiUrl)/breed/\(self.name)/images"
                 
         // Create the URL object based on the string
         let url = URL(string: urlString)
-        
         
         // If the url is not nil, then proceed
         if let url = url {
@@ -63,7 +65,30 @@ class Breed: Decodable, Identifiable {
                             
                             DispatchQueue.main.async {
                                 // Grab the URL list from the message property
-                                self.imageUrlList = decodedResult.message!
+                                
+                                var tempUrlList = decodedResult.message!
+                                
+                                // MARK: - Remove the non-matching URLs from the code, per the terrier example
+                                // Create a new list with
+                                let breedNameList = self.name.components(separatedBy: .whitespaces) // CharacterSet
+                                
+                                // Check if it has more than one name
+                                if breedNameList.count > 1 {
+                                    // If it does, then reverse order the name of the breed from irish terrier to terrier-irish to match the URL pattern only for this breed
+                                    let urlFormat = "\(breedNameList[1])-\(breedNameList[0])"
+                                    
+                                    if breedNameList.count > 2 {
+                                        print("Line 81 in breed contains multiple names. Name: \(self.name)")
+                                    }
+                                    
+                                    // Filter the tempUrlList to only contain the urlFormat names
+                                    tempUrlList = tempUrlList.filter(){$0.contains(urlFormat) != true}
+
+                                    
+                                }
+                                
+                                // Add the image URLs to the name
+                                self.imageUrlList = tempUrlList
                                                                 
                             }
                         }
